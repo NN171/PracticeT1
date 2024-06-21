@@ -14,23 +14,25 @@ public class PracticeT1Application implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        String testEmail = "NY-Konovalov-4@example.ru";
+        String testEmail = "NY-Konovalov-5@example.ru";
         Requests requests = new Requests();
 
-        System.out.println();
-        System.out.println("get-roles\n" + requests.getRoles() + "\n");
-        System.out.println("sign-up\n" + requests.signUp(
+        output("get-roles", requests.getRoles());
+        output("sign-up", requests.signUp(
                 "Коновалов",
                 "Никита",
                 testEmail,
-                "Разработчик Java")
-                + "\n");
+                "Разработчик Java"));
 
         String response = requests.getCode(testEmail);
         String token = Encoder.encode(testEmail, response);
 
-        System.out.println("get-code\n" + requests.getCode(testEmail) + "\n");
-        System.out.println("encode\n" + Encoder.encode(testEmail, response) + "\n");
-        System.out.print("set-status\n" + requests.setStatus(token, "increased") + "\n");
+        output("get-code", requests.getCode(testEmail));
+        output("encode", Encoder.encode(testEmail, response));
+        output("set-status", requests.setStatus(token, "increased"));
+    }
+
+    public void output(String endpoint, String request) {
+        System.out.printf("\n%s\n%s\n", endpoint, request);
     }
 }
