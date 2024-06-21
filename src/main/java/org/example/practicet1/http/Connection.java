@@ -12,27 +12,29 @@ import java.net.URL;
 public class Connection {
     public static String getUrlConnection(HttpURLConnection con) throws IOException {
         int responseCode = con.getResponseCode();
+
         if (responseCode == HttpURLConnection.HTTP_OK) {
             String responseString;
-            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
             String inputLine;
-            StringBuffer response = new StringBuffer();
+            StringBuilder response = new StringBuilder();
 
-            while ((inputLine = in.readLine()) != null) {
+            while ((inputLine = br.readLine()) != null) {
                 response.append(inputLine);
             }
-            in.close();
+
+            br.close();
             responseString = response.toString();
 
-            return responseString;
-        }
-        else return "Ошибка " + responseCode;
+            return responseString.replace("\"", "");
+        } else return "Ошибка " + responseCode;
     }
 
     public static HttpURLConnection httpConnectionCfg(URL url, String method) throws IOException {
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
         con.setRequestMethod(method);
+        con.setRequestProperty("Content-Type", "application/json");
         con.setRequestProperty("Accept", "application/json");
 
         return con;
@@ -44,14 +46,24 @@ public class Connection {
 
         con.setDoOutput(true);
         OutputStream os = con.getOutputStream();
-
-        os.write(requestBody.getBytes());
+        byte[] input = requestBody.getBytes();
+        os.write(input);
+        os.flush();
+        os.close();
 
         int responseCode = con.getResponseCode();
 
         if (responseCode == HttpURLConnection.HTTP_OK) {
-            return"Регистрация прошла успешно";
+            BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+
+            while ((inputLine = br.readLine()) != null) {
+                response.append(inputLine);
+            }
+            return response.toString();
+        } else {
+            return "Ошибка " + responseCode;
         }
-        else return "Ошибка " + responseCode;
     }
 }

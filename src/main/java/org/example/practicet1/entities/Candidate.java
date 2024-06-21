@@ -2,10 +2,8 @@ package org.example.practicet1.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 
 @AllArgsConstructor
-@Getter
 public class Candidate {
     @JsonProperty("last_name")
     private String lastName;
@@ -13,7 +11,9 @@ public class Candidate {
     @JsonProperty("first_name")
     private String firstName;
 
+    @JsonProperty("email")
     private String email;
 
+    @JsonProperty("role")
     private String role;
 }

@@ -1,6 +1,7 @@
 package org.example.practicet1.http;
 
 import org.example.practicet1.entities.Candidate;
+import org.example.practicet1.entities.Status;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -12,14 +13,14 @@ public class Requests {
 
     private static final String BASE_URL = "http://193.19.100.32:7000/api";
 
-    public void getRoles() throws IOException {
+    public String getRoles() throws IOException {
         URL url = new URL(BASE_URL.concat("/get-roles"));
         HttpURLConnection connection = httpConnectionCfg(url, "GET");
 
-        System.out.println(getUrlConnection(connection));
+        return getUrlConnection(connection);
     }
 
-    public void signUp(String lastName, String firstName, String email, String role) throws IOException {
+    public String signUp(String lastName, String firstName, String email, String role) throws IOException {
         Candidate candidate = new Candidate(
                 lastName,
                 firstName,
@@ -28,16 +29,22 @@ public class Requests {
 
         URL url = new URL(BASE_URL.concat("/sign-up"));
         HttpURLConnection connection = httpConnectionCfg(url, "POST");
-        System.out.println(postUrlConnection(connection, candidate));
+
+        return postUrlConnection(connection, candidate);
     }
 
-    public void getCode(String email) throws IOException {
-        URL url = new URL(BASE_URL.concat("/get-code?email=" + email));
+    public String getCode(String email) throws IOException {
+        URL url = new URL(BASE_URL.concat("/get-code?email=".concat(email)));
         HttpURLConnection connection = httpConnectionCfg(url, "GET");
 
-        System.out.println(getUrlConnection(connection));
+        return getUrlConnection(connection);
     }
 
+    public String setStatus(String token, String textStatus) throws IOException {
+        Status status = new Status(token, textStatus);
+        URL url = new URL(BASE_URL.concat("/set-status"));
+        HttpURLConnection connection = httpConnectionCfg(url, "POST");
 
+        return postUrlConnection(connection, status);
+    }
 }
-
